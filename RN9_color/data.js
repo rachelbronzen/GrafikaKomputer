@@ -27,6 +27,7 @@ function generateFaceColoredData(vertices, indices, faceDiffuseColors) {
 
         const faceIndex = i / 6;
         const diffuseColor = faceDiffuseColors[faceIndex % faceDiffuseColors.length];
+        
         //setiap 1 sisi terdapat 6 titik
         for (let j = 0; j < 6; j++) {
             const vertexIndex = indices[i + j];
@@ -41,32 +42,44 @@ function generateFaceColoredData(vertices, indices, faceDiffuseColors) {
     return { vertices: expandedVertices, normals: expandedNormals, diffuseColors: expandedDiffuseColors };
 }
 
+
 export function getRLetterData() {
     const pinkColor = [ [0.9, 0.25, 0.6] ]; 
 
-    const stemDef = { //batang R bagian |
-        vertices: [ -0.5,-0.5, .2, -0.2,-0.5, .2, -0.2,1, .2, -0.5,1, .2, -0.5,-0.5,-.2, -0.2,-0.5,-.2, -0.2,1,-.2, -0.5,1,-.2 ],
-        indices: [ 0,1,2, 0,2,3, 1,5,6, 1,6,2, 5,4,7, 5,7,6, 4,0,3, 4,3,7, 3,2,6, 3,6,7, 4,5,1, 4,1,0 ]};
-    const rCurveTopDef = { //lengkungan R bagian -
-        vertices: [ -0.2,0.9,.2, 0.3,0.9,.2, 0.3,1.0,.2, -0.2,1.0,.2, -0.2,0.9,-.2, 0.3,0.9,-.2, 0.3,1.0,-.2, -0.2,1.0,-.2 ],
-        indices: [ 0,1,2, 0,2,3, 1,5,6, 1,6,2, 5,4,7, 5,7,6, 4,0,3, 4,3,7, 3,2,6, 3,6,7, 4,5,1, 4,1,0 ]};
-    const rCurveBottomDef = { //lengkungan R bagian _
-        vertices: [ -0.2,0.3,.2, 0.3,0.3,.2, 0.3,0.4,.2, -0.2,0.4,.2, -0.2,0.3,-.2, 0.3,0.3,-.2, 0.3,0.4,-.2, -0.2,0.4,-.2 ],
-        indices: [ 0,1,2, 0,2,3, 1,5,6, 1,6,2, 5,4,7, 5,7,6, 4,0,3, 4,3,7, 3,2,6, 3,6,7, 4,5,1, 4,1,0 ]};
-    const rCurveRightDef = { //lengkungan R bagian |
-        vertices: [ 0.2,0.4,.2, 0.3,0.4,.2, 0.3,0.9,.2, 0.2,0.9,.2, 0.2,0.4,-.2, 0.3,0.4,-.2, 0.3,0.9,-.2, 0.2,0.9,-.2 ],
-        indices: [ 0,1,2, 0,2,3, 1,5,6, 1,6,2, 5,4,7, 5,7,6, 4,0,3, 4,3,7, 3,2,6, 3,6,7, 4,5,1, 4,1,0 ]};
+    // Indices standar untuk balok (kecuali kaki)
+    const blockIndices = [ 0,1,2, 0,2,3, 1,5,6, 1,6,2, 5,4,7, 5,7,6, 4,0,3, 4,3,7, 3,2,6, 3,6,7, 4,5,1, 4,1,0 ];
 
-    const legDef = { //kaki R bagian \
-        vertices: [ -0.2,.3,.2, 0,.3,.2, 0.5,-0.5,.2, 0.3,-0.5,.2, -0.2,.3,-.2, 0,.3,-.2, 0.5,-0.5,-.2, 0.3,-0.5,-.2 ],
-        indices: [ 
-            0,2,1, 0,3,2, //depan (dibalik)
-            1,6,5, 1,2,6, //kanan
-            5,7,4, 5,6,7, //belakang
-            4,3,0, 4,7,3, //kiri (dibalik)
-            1,4,0, 1,5,4, //atas (dibalik)
-            3,6,2, 3,7,6  //bawah
-        ]
+    const stemDef = { //batang R bagian | (Tebal)
+        vertices: [ -0.5,-0.5, .2, -0.2,-0.5, .2, -0.2,1, .2, -0.5,1, .2, -0.5,-0.5,-.2, -0.2,-0.5,-.2, -0.2,1,-.2, -0.5,1,-.2 ],
+        indices: blockIndices
+    };
+    const rCurveTopDef = { //lengkungan R bagian - (Atas Tebal)
+        vertices: [ -0.2,0.8,.2, 0.4,0.8,.2, 0.4,1.0,.2, -0.2,1.0,.2, -0.2,0.8,-.2, 0.4,0.8,-.2, 0.4,1.0,-.2, -0.2,1.0,-.2 ],
+        indices: blockIndices
+    };
+    const rCurveBottomDef = { //lengkungan R bagian _ (Tengah Tebal)
+        vertices: [ -0.2,0.2,.2, 0.4,0.2,.2, 0.4,0.4,.2, -0.2,0.4,.2, -0.2,0.2,-.2, 0.4,0.2,-.2, 0.4,0.4,-.2, -0.2,0.4,-.2 ],
+        indices: blockIndices
+    };
+    const rCurveRightDef = { //lengkungan R bagian | (Kanan Tebal)
+        vertices: [ 0.2,0.4,.2, 0.4,0.4,.2, 0.4,0.8,.2, 0.2,0.8,.2, 0.2,0.4,-.2, 0.4,0.4,-.2, 0.4,0.8,-.2, 0.2,0.8,-.2 ],
+        indices: blockIndices
+    };
+
+    const legDef = { 
+        vertices: [
+            //depan
+            -0.2, 0.2,  0.2,  //0: top left
+             0.2, -0.5, 0.2,  //1: bottom left
+             0.5, -0.5, 0.2,  //2: bottom right
+             0.1, 0.2,  0.2,  //3: top right
+            //belakang
+            -0.2, 0.2, -0.2,
+             0.2, -0.5, -0.2,
+             0.5, -0.5, -0.2,
+             0.1, 0.2, -0.2
+        ],
+        indices: blockIndices
     };
 
     return {
@@ -76,7 +89,6 @@ export function getRLetterData() {
         curveRight: generateFaceColoredData(rCurveRightDef.vertices, rCurveRightDef.indices, pinkColor),
         leg: generateFaceColoredData(legDef.vertices, legDef.indices, pinkColor),
     };
-
 }
 
 export function getNLetterData() {
